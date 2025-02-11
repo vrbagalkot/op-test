@@ -55,7 +55,6 @@ class InstallUpstreamKernel(unittest.TestCase):
         self.append_kernel_cmdline = self.conf.args.append_kernel_cmdline
         self.util = OpTestUtil(OpTestConfiguration.conf)
         self.host_distro_name = self.util.distro_name()
-        self.host_distro_version = self.util.get_distro_version()
         if self.config_path:
             self.config = "olddefconfig"
         if not self.repo:
@@ -160,12 +159,8 @@ class InstallUpstreamKernel(unittest.TestCase):
                         '%s /boot/vmlinu*-`uname -r`' % gruby_cmd)
                 elif self.host_distro_name in ['sles', 'SLES']:
                     con.run_command('%s /boot/vmlinu*-`uname -r`' % gruby_cmd)
-                if self.host_distro_version.split()[0] <= 8:
-                    con.run_command(
-                        "grub2-mkconfig  --output=/boot/grub2/grub.cfg")
-                else:
-                    con.run_command(
-                        "grub2-mkconfig  --output=/boot/grub2/grub.cfg --update-bls-cmdline")
+                con.run_command(
+                    "grub2-mkconfig  --output=/boot/grub2/grub.cfg")
                 con.run_command(kexec_cmdline)
                 boot_cmd = 'kexec -e'
             self.console_thread.console_terminate()
